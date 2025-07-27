@@ -1,127 +1,402 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
-</head>
-<body class="bg-blue-900 flex items-center justify-center min-h-screen">
-    <div class="w-80 bg-blue-800 p-4 rounded-lg shadow-lg">
-        <h1 class="text-white text-center text-xl font-bold mb-4">Todo List</h1>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Login</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         
-        <div class="mb-4">
-            <label class="text-white block mb-1">Add New</label>
-            <div class="flex">
-                <input id="new-task" type="text" placeholder="type here..." class="flex-grow p-2 rounded-l-md border-none">
-                <button id="add-task" class="bg-green-600 text-white p-2 rounded-r-md"><i class="fas fa-plus"></i></button>
+        :root {
+            --navy: #0a192f;
+            --light-navy: #172a45;
+            --lightest-navy: #303c55;
+            --slate: #8892b0;
+            --light-slate: #a8b2d1;
+            --lightest-slate: #ccd6f6;
+            --teal: #64ffda;
+            --teal-tint: rgba(100, 255, 218, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: var(--navy);
+            color: var(--lightest-slate);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background-image: radial-gradient(circle at center, var(--light-navy) 0%, var(--navy) 100%);
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            background-color: var(--light-navy);
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .login-container:hover {
+            transform: translateY(-5px);
+        }
+        
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--teal);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .brand-logo {
+            margin-bottom: 1.5rem;
+        }
+        
+        .brand-logo img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+        
+        .login-header h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+        
+        .login-header p {
+            color: var(--slate);
+            font-size: 0.9rem;
+        }
+        
+        .form-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 1rem 1rem;
+            background-color: var(--lightest-navy);
+            border: 2px solid transparent;
+            border-radius: 6px;
+            color: var(--lightest-slate);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--teal);
+            background-color: var(--navy);
+        }
+        
+        .form-label {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            color: var(--slate);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            padding: 0 0.25rem;
+            background-color: var(--lightest-navy);
+        }
+        
+        .form-input:focus + .form-label,
+        .form-input:not(:placeholder-shown) + .form-label {
+            top: -0.5rem;
+            left: 0.8rem;
+            font-size: 0.75rem;
+            background-color: var(--light-navy);
+            color: var(--teal);
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--slate);
+            transition: color 0.2s ease;
+        }
+        
+        .password-toggle:hover {
+            color: var(--teal);
+        }
+        
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .remember-me input {
+            accent-color: var(--teal);
+        }
+        
+        .forgot-password a {
+            color: var(--slate);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        
+        .forgot-password a:hover {
+            color: var(--teal);
+        }
+        
+        .login-button {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--teal);
+            color: var(--navy);
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+        
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--teal-tint);
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background-color: var(--lightest-navy);
+        }
+        
+        .divider span {
+            padding: 0 1rem;
+            color: var(--slate);
+            font-size: 0.8rem;
+        }
+        
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--lightest-navy);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            background-color: var(--teal);
+            transform: translateY(-2px);
+        }
+        
+        .social-icon img {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .register-link {
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .register-link a {
+            color: var(--teal);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .error-message {
+            color: #ff6b6b;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        .input-error {
+            border-color: #ff6b6b !important;
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .login-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="brand-logo">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/f2c6045f-201f-470a-a271-b66de3524400.png" alt="Abstract modern tech logo with teal and navy colors representing digital security"/>
+            </div>
+            <h1>Welcome Back</h1>
+            <p>Sign in to access your account</p>
+        </div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <input type="text" class="form-input" id="email" placeholder=" " required>
+                <label for="email" class="form-label">Email Address</label>
+                <div class="error-message" id="email-error">Please enter a valid email address</div>
+            </div>
+            
+            <div class="form-group">
+                <input type="password" class="form-input" id="password" placeholder=" " required>
+                <label for="password" class="form-label">Password</label>
+                <span class="password-toggle" id="togglePassword">👁️</span>
+                <div class="error-message" id="password-error">Password must be at least 6 characters</div>
+            </div>
+            
+            <div class="remember-forgot">
+                <div class="remember-me">
+                    <input type="checkbox" id="remember">
+                    <label for="remember">Remember me</label>
+                </div>
+                <div class="forgot-password">
+                    <a href="#">Forgot password?</a>
+                </div>
+            </div>
+            
+            <button type="submit" class="login-button">Login</button>
+        </form>
+        
+        <div class="divider">
+            <span>or continue with</span>
+        </div>
+        
+        <div class="social-login">
+            <div class="social-icon">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/14d2bf00-14a5-45c1-810a-59d6e8c38d91.png" alt="Google logo icon"/>
+            </div>
+            <div class="social-icon">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/e1c7625a-7511-4076-90a1-0b414829a4b2.png" alt="Apple logo icon"/>
+            </div>
+            <div class="social-icon">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/c4a3d6ff-ff7a-4e57-a550-3e29087d92c9.png" alt="Facebook logo icon"/>
             </div>
         </div>
         
-        <div class="mb-4">
-            <label class="text-white block mb-1">Filter</label>
-            <input id="filter-tasks" type="text" placeholder="type here..." class="w-full p-2 rounded-md border-none">
+        <div class="register-link">
+            <p>Don't have an account? <a href="#">Register</a></p>
         </div>
-        
-        <div class="mb-4">
-            <h2 class="text-white text-lg mb-2">Active</h2>
-            <div id="active-tasks"></div>
-        </div>
-        
-        <div class="mb-4">
-            <h2 class="text-white text-lg mb-2">Completed</h2>
-            <div id="completed-tasks"></div>
-        </div>
-        
-        <button id="clear-all" class="bg-black text-white w-full p-2 rounded-md">CLEAR ALL</button>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const newTaskInput = document.getElementById('new-task');
-            const addTaskButton = document.getElementById('add-task');
-            const filterTasksInput = document.getElementById('filter-tasks');
-            const activeTasksContainer = document.getElementById('active-tasks');
-            const completedTasksContainer = document.getElementById('completed-tasks');
-            const clearAllButton = document.getElementById('clear-all');
-
-            let tasks = [];
-
-            function renderTasks() {
-                activeTasksContainer.innerHTML = '';
-                completedTasksContainer.innerHTML = '';
-
-                const filteredTasks = tasks.filter(task => task.text.toLowerCase().includes(filterTasksInput.value.toLowerCase()));
-
-                filteredTasks.forEach(task => {
-                    const taskElement = document.createElement('div');
-                    taskElement.className = 'flex items-center mb-2';
-
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.className = 'mr-2';
-                    checkbox.checked = task.completed;
-                    checkbox.addEventListener('change', () => {
-                        task.completed = !task.completed;
-                        renderTasks();
-                    });
-
-                    const taskText = document.createElement('span');
-                    taskText.className = 'flex-grow text-white';
-                    if (task.completed) {
-                        taskText.classList.add('line-through');
-                    }
-                    taskText.textContent = task.text;
-
-                    const editButton = document.createElement('button');
-                    editButton.className = 'bg-blue-600 text-white p-1 rounded-md mr-1';
-                    editButton.innerHTML = '<i class="fas fa-pen"></i>';
-                    editButton.addEventListener('click', () => {
-                        const newText = prompt('Edit task:', task.text);
-                        if (newText !== null) {
-                            task.text = newText;
-                            renderTasks();
-                        }
-                    });
-
-                    const deleteButton = document.createElement('button');
-                    deleteButton.className = 'bg-red-600 text-white p-1 rounded-md';
-                    deleteButton.innerHTML = '<i class="fas fa-times"></i>';
-                    deleteButton.addEventListener('click', () => {
-                        tasks = tasks.filter(t => t !== task);
-                        renderTasks();
-                    });
-
-                    taskElement.appendChild(checkbox);
-                    taskElement.appendChild(taskText);
-                    taskElement.appendChild(editButton);
-                    taskElement.appendChild(deleteButton);
-
-                    if (task.completed) {
-                        completedTasksContainer.appendChild(taskElement);
-                    } else {
-                        activeTasksContainer.appendChild(taskElement);
-                    }
-                });
-            }
-
-            addTaskButton.addEventListener('click', () => {
-                const newTaskText = newTaskInput.value.trim();
-                if (newTaskText) {
-                    tasks.push({ text: newTaskText, completed: false });
-                    newTaskInput.value = '';
-                    renderTasks();
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle password visibility
+            const togglePassword = document.getElementById('togglePassword');
+            const password = document.getElementById('password');
+            
+            togglePassword.addEventListener('click', function() {
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+                this.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+            });
+            
+            // Form validation
+            const form = document.getElementById('loginForm');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const emailError = document.getElementById('email-error');
+            const passwordError = document.getElementById('password-error');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                let isValid = true;
+                
+                // Email validation
+                if (!emailInput.value || !/\S+@\S+\.\S+/.test(emailInput.value)) {
+                    emailInput.classList.add('input-error');
+                    emailError.style.display = 'block';
+                    isValid = false;
                 } else {
-                    alert('Enter something');
+                    emailInput.classList.remove('input-error');
+                    emailError.style.display = 'none';
+                }
+                
+                // Password validation
+                if (!passwordInput.value || passwordInput.value.length < 6) {
+                    passwordInput.classList.add('input-error');
+                    passwordError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    passwordInput.classList.remove('input-error');
+                    passwordError.style.display = 'none';
+                }
+                
+                if (isValid) {
+                    // In a real application, you would submit to server here
+                    alert('Login successful! Redirecting...');
+                    form.reset();
                 }
             });
-
-            filterTasksInput.addEventListener('input', renderTasks);
-
-            clearAllButton.addEventListener('click', () => {
-                tasks = [];
-                renderTasks();
+            
+            // Remove error styles when typing
+            emailInput.addEventListener('input', function() {
+                if (this.classList.contains('input-error')) {
+                    this.classList.remove('input-error');
+                    emailError.style.display = 'none';
+                }
             });
-
-            renderTasks();
+            
+            passwordInput.addEventListener('input', function() {
+                if (this.classList.contains('input-error')) {
+                    this.classList.remove('input-error');
+                    passwordError.style.display = 'none';
+                }
+            });
         });
     </script>
 </body>
 </html>
+
